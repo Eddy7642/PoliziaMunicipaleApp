@@ -1,33 +1,39 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PoliziaMunicipaleApp.Models;
+using PoliziaMunicipaleApp.Services;
 
 namespace PoliziaMunicipaleApp.Controllers
 {
     public class TipoViolazioneController : Controller
     {
-        private readonly YourDbContext _context = new YourDbContext();
+        private readonly TipoViolazioneService _tipoViolazioneService;
 
-        public ActionResult Index()
+        public TipoViolazioneController(IConfiguration configuration)
         {
-            return View(_context.TipoViolazioni.ToList());
+            _tipoViolazioneService = new TipoViolazioneService(configuration);
         }
 
-        public ActionResult Create()
+        public IActionResult Index()
+        {
+            var tipoViolazioni = _tipoViolazioneService.GetAllTipoViolazioni();
+            return View(tipoViolazioni);
+        }
+
+        public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult Create(TipoViolazione tipoViolazione)
+        public IActionResult Create(TipoViolazione tipoViolazione)
         {
             if (ModelState.IsValid)
             {
-                _context.TipoViolazioni.Add(tipoViolazione);
-                _context.SaveChanges();
+                _tipoViolazioneService.AddTipoViolazione(tipoViolazione);
                 return RedirectToAction("Index");
             }
             return View(tipoViolazione);
         }
     }
-
 }
+

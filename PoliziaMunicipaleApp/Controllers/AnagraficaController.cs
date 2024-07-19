@@ -1,29 +1,35 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PoliziaMunicipaleApp.Models;
+using PoliziaMunicipaleApp.Services;
 
 namespace PoliziaMunicipaleApp.Controllers
 {
     public class AnagraficaController : Controller
     {
-        private readonly YourDbContext _context = new YourDbContext();
+        private readonly AnagraficaService _anagraficaService;
 
-        public ActionResult Index()
+        public AnagraficaController(IConfiguration configuration)
         {
-            return View(_context.Anagrafiche.ToList());
+            _anagraficaService = new AnagraficaService(configuration);
         }
 
-        public ActionResult Create()
+        public IActionResult Index()
+        {
+            var anagrafiche = _anagraficaService.GetAllAnagrafiche();
+            return View(anagrafiche);
+        }
+
+        public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult Create(Anagrafica anagrafica)
+        public IActionResult Create(Anagrafica anagrafica)
         {
             if (ModelState.IsValid)
             {
-                _context.Anagrafiche.Add(anagrafica);
-                _context.SaveChanges();
+                _anagraficaService.AddAnagrafica(anagrafica);
                 return RedirectToAction("Index");
             }
             return View(anagrafica);
