@@ -3,6 +3,11 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Benvenuto all'applicazione Polizia Municipale</h1>
+    <p>@ViewData["Message"]</p>
+    <p>Questa è la pagina di benvenuto dell'applicazione.</p>
+
+    <a href="/Anagrafica/Index" class="btn btn-primary">Gestisci Anagrafiche</a>
+    <a href="/TipoViolazione/Index" class="btn btn-primary">Gestisci Tipo Violazioni</a>
+    <a href="/Verbale/Index" class="btn btn-primary">Gestisci Verbali</a>
 </div>

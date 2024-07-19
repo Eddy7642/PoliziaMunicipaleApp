@@ -1,39 +1,51 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PoliziaMunicipaleApp.Models;
+using PoliziaMunicipaleApp.Services;
 
 namespace PoliziaMunicipaleApp.Controllers
 {
     public class VerbaleController : Controller
     {
-        private readonly YourDbContext _context = new YourDbContext();
+        private readonly VerbaleService _verbaleService;
+        private readonly AnagraficaService _anagraficaService;
+        private readonly TipoViolazioneService _tipoViolazioneService;
 
-        public ActionResult Index()
+        public VerbaleController(IConfiguration configuration)
         {
-            var verbali = _context.Verbali.Include(v => v.Anagrafica).Include(v => v.TipoViolazione).ToList();
+            _verbaleService = new VerbaleService(configuration);
+            _anagraficaService = new AnagraficaService(configuration);
+            _tipoViolazioneService = new TipoViolazioneService(configuration);
+        }
+
+        public IActionResult Index()
+        {
+            var verbali = _verbaleService.GetAllVerbali();
+            if (verbali == null)
+            {
+                verbali = new List<Verbale>(); // Restituisci una lista vuota invece di null
+            }
             return View(verbali);
         }
 
-        public ActionResult Create()
+        public IActionResult Create()
         {
-            ViewBag.Idanagrafica = new SelectList(_context.Anagrafiche, "Idanagrafica", "Cognome");
-            ViewBag.Idviolazione = new SelectList(_context.TipoViolazioni, "Idviolazione", "Descrizione");
+            ViewBag.Idanagrafica = new SelectList(_anagraficaService.GetAllAnagrafiche(), "Idanagrafica", "Cognome");
+            ViewBag.Idviolazione = new SelectList(_tipoViolazioneService.GetAllTipoViolazioni(), "Idviolazione", "Descrizione");
             return View();
         }
 
         [HttpPost]
-        public ActionResult Create(Verbale verbale)
+        public IActionResult Create(Verbale verbale)
         {
             if (ModelState.IsValid)
             {
-                _context.Verbali.Add(verbale);
-                _context.SaveChanges();
+                _verbaleService.AddVerbale(verbale);
                 return RedirectToAction("Index");
             }
-            ViewBag.Idanagrafica = new SelectList(_context.Anagrafiche, "Idanagrafica", "Cognome", verbale.Idanagrafica);
-            ViewBag.Idviolazione = new SelectList(_context.TipoViolazioni, "Idviolazione", "Descrizione", verbale.Idviolazione);
+            ViewBag.Idanagrafica = new SelectList(_anagraficaService.GetAllAnagrafiche(), "Idanagrafica", "Cognome", verbale.Idanagrafica);
+            ViewBag.Idviolazione = new SelectList(_tipoViolazioneService.GetAllTipoViolazioni(), "Idviolazione", "Descrizione", verbale.Idviolazione);
             return View(verbale);
         }
     }
-
 }
