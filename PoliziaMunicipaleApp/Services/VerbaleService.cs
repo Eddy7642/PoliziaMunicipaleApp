@@ -23,5 +23,10 @@ namespace PoliziaMunicipaleApp.Services
         {
             _verbaleDao.Add(verbale);
         }
+
+        public bool DeleteVerbale(int id)
+        {
+            return _verbaleDao.Delete(id);
+        }
     }
 }

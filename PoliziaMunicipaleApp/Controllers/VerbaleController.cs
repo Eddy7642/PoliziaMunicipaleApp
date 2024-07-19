@@ -21,10 +21,6 @@ namespace PoliziaMunicipaleApp.Controllers
         public IActionResult Index()
         {
             var verbali = _verbaleService.GetAllVerbali();
-            if (verbali == null)
-            {
-                verbali = new List<Verbale>(); // Restituisci una lista vuota invece di null
-            }
             return View(verbali);
         }
 
@@ -47,5 +43,20 @@ namespace PoliziaMunicipaleApp.Controllers
             ViewBag.Idviolazione = new SelectList(_tipoViolazioneService.GetAllTipoViolazioni(), "Idviolazione", "Descrizione", verbale.Idviolazione);
             return View(verbale);
         }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var success = _verbaleService.DeleteVerbale(id);
+            if (success)
+            {
+                return Json(new { success = true });
+            }
+            else
+            {
+                return Json(new { success = false, message = "Error deleting record." });
+            }
+        }
     }
 }
+

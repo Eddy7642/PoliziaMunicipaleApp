@@ -69,6 +69,20 @@ namespace PoliziaMunicipaleApp.DAO
                 }
             }
         }
+
+        public bool Delete(int id)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                string query = "DELETE FROM VERBALE WHERE Idverbale = @Idverbale";
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Idverbale", id);
+
+                    connection.Open();
+                    return command.ExecuteNonQuery() > 0;
+                }
+            }
+        }
     }
 }
-

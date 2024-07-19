@@ -51,7 +51,7 @@ else
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
+                <tr id="row-@item.Idverbale">
                     <td>
                         @Html.DisplayFor(modelItem => item.DataViolazione)
                     </td>
@@ -80,7 +80,7 @@ else
                         <div class="btn-group" role="group">
                             <a class="btn btn-success btn-sm" asp-action="Edit" asp-route-id="@item.Idverbale">Edit</a>
                             <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@item.Idverbale">Details</a>
-                            <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.Idverbale">Delete</a>
+                            <button class="btn btn-danger btn-sm" onclick="deleteRecord(@item.Idverbale)">Delete</button>
                         </div>
                     </td>
                 </tr>
@@ -88,3 +88,28 @@ else
         </tbody>
     </table>
 }
+
+@section Scripts {
+    <script>
+        function deleteRecord(id) {
+            if (confirm('Sei sicuro di voler eliminare questo verbale?')) {
+                $.ajax({
+                    url: '@Url.Action("Delete", "Verbale")',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (response) {
+                        if (response.success) {
+                            $('#row-' + id).remove();
+                        } else {
+                            alert('Errore durante l\'eliminazione del record: ' + response.message);
+                        }
+                    },
+                    error: function () {
+                        alert('Errore durante l\'eliminazione del record.');
+                    }
+                });
+            }
+        }
+    </script>
+}
+
