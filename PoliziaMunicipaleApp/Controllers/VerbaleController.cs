@@ -32,12 +32,13 @@ namespace PoliziaMunicipaleApp.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(Verbale verbale)
         {
             if (ModelState.IsValid)
             {
                 _verbaleService.AddVerbale(verbale);
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             ViewBag.Idanagrafica = new SelectList(_anagraficaService.GetAllAnagrafiche(), "Idanagrafica", "Cognome", verbale.Idanagrafica);
             ViewBag.Idviolazione = new SelectList(_tipoViolazioneService.GetAllTipoViolazioni(), "Idviolazione", "Descrizione", verbale.Idviolazione);
