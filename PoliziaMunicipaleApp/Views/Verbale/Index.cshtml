@@ -7,7 +7,7 @@
 <h2>Index</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-primary" asp-action="Create">Create New</a>
 </p>
 
 @if (Model == null || !Model.Any())
@@ -18,7 +18,7 @@
 }
 else
 {
-    <table class="table">
+    <table class="table table-striped table-bordered">
         <thead>
             <tr>
                 <th>
@@ -45,7 +45,7 @@ else
                 <th>
                     @Html.DisplayNameFor(model => model.TipoViolazione.Descrizione)
                 </th>
-                <th></th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -77,9 +77,11 @@ else
                         @Html.DisplayFor(modelItem => item.TipoViolazione.Descrizione)
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.Idverbale">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Idverbale">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Idverbale">Delete</a>
+                        <div class="btn-group" role="group">
+                            <a class="btn btn-success btn-sm" asp-action="Edit" asp-route-id="@item.Idverbale">Edit</a>
+                            <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@item.Idverbale">Details</a>
+                            <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.Idverbale">Delete</a>
+                        </div>
                     </td>
                 </tr>
             }
